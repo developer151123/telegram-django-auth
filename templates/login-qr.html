@@ -1,0 +1,72 @@
+{% load qr_code %}
+{% load i18n %}
+{% load static %}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Telegram</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+
+    <link href="{% static 'css/tailwind.css' %}?v=1.0.4" rel="stylesheet">
+    <link href="{% static 'css/styles.css' %}?v=2.0" rel="stylesheet">
+</head>
+<body class="flex h-full w-full justify-center items-start">
+<div id="auth-form" class="flex flex-col items-center justify-center gap-4 w-[330px]">
+    <div data-empty-placeholder class="qr background-primary mt-16 mb-8" id="qr">
+       <img src="{% qr_url_from_text url size=16 %}" alt="Hello World!">
+    </div>
+    <h1 class="text-xl font-semibold">{% trans "Log in to Telegram by QR Code" %}</h1>
+    <ol class="list-decimal list-inside space-y-4">
+        <li class="flex items-start gap-x-2">
+            <span class="flex items-center justify-center !min-w-5 !min-h-5 background-primary text-white text-sm rounded-full">
+                1
+            </span>
+            <span>{% trans "Open Telegram on your phone" %}</span>
+        </li>
+        <li class="flex items-start gap-x-2">
+            <span class="flex items-center justify-center !min-w-5 !min-h-5 background-primary text-white text-sm rounded-full">
+                2
+            </span>
+            <span>{% trans "Go to <b>Settings</b> &gt; <b>Devices</b> &gt; <b>Link Desktop Device</b>" %}</span>
+        </li>
+        <li class="flex items-start gap-x-2">
+            <span class="flex items-center justify-center !min-w-5 !min-h-5 background-primary text-white text-sm rounded-full">
+                3
+            </span>
+            <span>{% trans "Point your phone at this screen to confirm login" %}</span>
+        </li>
+    </ol>
+
+    <div class="flex flex-col items-center justify-center">
+        <button id="login-phone-btn" class="uppercase color-primary hover:bg-sky-50 w-96 h-12 rounded-xl">{% trans "Log in by phone Number" %}</button>
+        {% if lang == "en" %}
+            <button id="qr-russian-btn" class="uppercase color-primary hover:bg-sky-50 w-96 h-12 rounded-xl">Продолжить на русском</button>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+     window.onload = function () {
+        // Get the buttons by their IDs.
+        document.getElementById("login-phone-btn").addEventListener("click", function (event) {
+            // Navigate to the desired page for phone login
+            event.preventDefault();
+            window.location.href = "/phone"; // Replace with your URL
+        });
+
+        if (document.getElementById("qr-russian-btn")) {
+         document.getElementById("qr-russian-btn").addEventListener("click", function (event) {
+            // Navigate to a Russian-specific page or another URL
+            event.preventDefault();
+            window.location.href = "/change-language/?lang=ru&app=qr"; // Replace with your URL
+        });
+        }
+     }
+</script>
+
+</body>
+</html>

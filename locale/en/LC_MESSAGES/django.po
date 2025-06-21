@@ -1,0 +1,59 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-20 20:40+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: .\templates\login-by-phone.html:22
+msgid "Please confirm your country code and enter your phone number."
+msgstr ""
+
+#: .\templates\login-by-phone.html:25
+msgid "Country"
+msgstr "Country"
+
+#: .\templates\login-by-phone.html:83
+msgid "Your phone number"
+msgstr "Your phone number"
+
+#: .\templates\login-by-phone.html:102
+msgid "Keep me signed in"
+msgstr ""
+
+#: .\templates\login-by-phone.html:107
+msgid "Log in by QR Code"
+msgstr ""
+
+#: .\templates\login-qr.html:20
+msgid "Log in to Telegram by QR Code"
+msgstr ""
+
+#: .\templates\login-qr.html:26
+msgid "Open Telegram on your phone"
+msgstr ""
+
+#: .\templates\login-qr.html:32
+msgid ""
+"Go to <b>Settings</b> &gt; <b>Devices</b> &gt; <b>Link Desktop Device</b>"
+msgstr ""
+
+#: .\templates\login-qr.html:38
+msgid "Point your phone at this screen to confirm login"
+msgstr ""
+
+#: .\templates\login-qr.html:43
+msgid "Log in by phone Number"
+msgstr ""

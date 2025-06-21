@@ -1,0 +1,251 @@
+{% load i18n %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <title>Telegram</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <link href="{% static 'css/tailwind.css' %}?v=1.0.10" rel="stylesheet">
+    <link href="{% static 'css/styles.css' %}?v=2.1" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"></script>
+</head>
+<body class="flex h-full w-full justify-center items-start">
+<div id="login-phone" class="flex flex-col items-center justify-center mt-28 w-[360px]">
+    <div id="logo" class="w-[160px] h-[160px] flex items-center justify-center">
+        <img src="{% static 'images/telegram-logo.svg' %}" alt="Telegram Logo" class="w-48 h-48">
+    </div>
+    <h1 class="mt-14 text-3xl font-semibold">Telegram</h1>
+    <p class="text-gray-400 text-center">{% trans "Please confirm your country code and enter your phone number." %}</p>
+    <form class="flex flex-col items-center justify-center w-full mt-10 gap-4">
+        <div class="relative w-full">
+            <label for="countries"
+                   class="absolute left-4 -top-2 bg-white px-1 text-xs text-gray-500">{% trans "Country" %}</label>
+            <div class="w-full">
+                <!-- Dropdown Button -->
+                <button
+                        id="dropdownButton"
+                        class="w-full flex justify-between items-center border rounded-xl hover:border-primary p-2 h-11"
+                        onclick="toggleDropdown()"
+                        type="button"
+                >
+                    <span id="selectedCountry"></span>
+                    <svg
+                            class="w-4 h-4"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                    >
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 9.75L12 17.25L4.5 9.75"/>
+                    </svg>
+                </button>
+
+                <!-- Dropdown Menu -->
+                <ul
+                        id="dropdownMenu"
+                        class="absolute invisible z-10 w-full mt-1 bg-white border rounded-xl shadow-lg max-h-64 overflow-y-auto"
+                >
+                    {% for country in countries %}
+                        <li
+                                class="flex items-center space-x-2 p-2 hover:bg-gray-100 cursor-pointer w-full"
+                                onclick="selectCountry({{ country }})"
+                        >
+
+                            <img
+                                    class="w-6 h-6 object-cover rounded-full"
+                                    src="/static/countries/{{ country.image }}"
+                                    alt="{{ country.country }}"
+                            />
+                            <span class="text-xs font-bold text-gray-500">{{ lang }}</span>
+                            {% if lang == "en" %}
+                                <span class="text-xs font-bold">{{ country.country }}</span>
+                            {% endif %}
+                            {% if lang == "ru" %}
+                                <span class="text-xs font-bold">{{ country.country_ru }}</span>
+                            {% endif %}
+                            <div class="flex-grow"></div>
+                            <span class="text-xs font-bold text-gray-500">{{ country.code }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                <!-- Hidden Input for the Country Code -->
+                <input type="hidden" id="selectedCountryCode" name="countryCode"/>
+            </div>
+
+
+        </div>
+        <div class="relative w-full">
+            <label for="phoneNumber" class="absolute left-4 -top-2 bg-white px-1 text-xs text-gray-500">
+                {% trans "Your phone number" %}
+            </label>
+            <input
+                    type="text"
+                    id="phoneNumber"
+                    class="w-full rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary focus:outline-none h-11 px-4"
+            />
+        </div>
+
+        <div class="flex items-center align-center w-full gap-2 mt-4 ml-8">
+            <!-- Keep Me Signed In Checkbox -->
+            <label class="container">
+                <input type="checkbox" checked="checked" id="keepSignedIn"
+                       name="keepSignedIn">
+                <span class="checkmark"></span>
+            </label>
+
+            <!-- Label for the checkbox -->
+            <label for="keepSignedIn" class="text-sm">
+                {% trans "Keep me signed in" %}
+            </label>
+        </div>
+
+        <div class="flex flex-col items-center justify-center mt-10 gap-4">
+            <button id="next"
+                    class="uppercase background-primary text-white w-96 h-12 rounded-xl hidden">{% trans "Next" %}</button>
+            <button id="login-qr-btn"
+                    class="uppercase color-primary hover:bg-sky-50 w-96 h-12 rounded-xl">{% trans "Log in by QR Code" %}</button>
+            {% if lang == "en" %}
+                <button id="phone-russian-btn" class="uppercase color-primary hover:bg-sky-50 w-96 h-12 rounded-xl">
+                    Продолжить на русском
+                </button>
+            {% endif %}
+        </div>
+    </form>
+</div>
+<script>
+    window.onload = async function () {
+        try {
+            // Use Geolocation API to get user's current location
+            const response = await fetch("https://ipapi.co/json/"); // Replace this API with your preferred one
+            const locationData = await response.json();
+
+            // Retrieve the country code from location data
+            const userCountryName = locationData.country_name; // Fallback if needed
+            // Automatically select the user's country
+            {% for country in countries %}
+                if ("{{ country.country }}" === userCountryName) {
+                    const selectedCountry = {
+                        code: "{{country.code}}",
+                        country: "{{country.country}}",
+                        country_ru: "{{country.country_ru}}",
+                    };
+                    selectCountry(selectedCountry);
+                }
+            {% endfor %}
+            toggleDropdown();
+
+        } catch (error) {
+            console.error("Failed to get user location:", error);
+        }
+        // Get the buttons by their IDs.
+        document.getElementById("login-qr-btn").addEventListener("click", function (event) {
+            // Navigate to the desired page for qr login
+            event.preventDefault();
+            window.location.href = "/qr"; // Replace with your URL
+        });
+
+        if (document.getElementById("phone-russian-btn")) {
+            document.getElementById("phone-russian-btn").addEventListener("click", function (event) {
+                // Navigate to a Russian-specific page or another URL
+                event.preventDefault();
+                window.location.href = "/change-language/?lang=ru&app=phone";
+            });
+        }
+
+        // Get references to the phone input, next button, and country code input
+        const phoneNumberInput = document.getElementById('phoneNumber');
+        const nextButton = document.getElementById('next');
+        const selectedCountryCodeInput = document.getElementById('selectedCountryCode'); // Country code field
+
+        // Initially hide the "Next" button
+        nextButton.style.display = 'none';
+
+        /**
+         * Function to check if the user has added more than just the country code
+         */
+        function toggleNextButton() {
+            const phoneNumberValue = phoneNumberInput.value.trim(); // Get the phone number input value
+            const countryCode = selectedCountryCodeInput.value; // Get the selected country code
+            console.log(countryCode);
+
+            // Compare the input value with the country code
+            if (phoneNumberValue.length > countryCode.length) {
+                nextButton.style.display = 'block'; // Show the button if input has additional content
+            } else {
+                nextButton.style.display = 'none'; // Hide the button if only the country code is present
+            }
+        }
+
+        // Add listeners for both user input and programmatic changes
+        phoneNumberInput.addEventListener('keydown', toggleNextButton);
+
+        // Call the function initially in case the input field is pre-filled with a country code
+        toggleNextButton();
+    }
+
+
+    function toggleDropdown() {
+        const dropdownMenu = document.getElementById("dropdownMenu");
+        dropdownMenu.classList.toggle("invisible");
+    }
+
+    window.onclick = function (event) {
+        const dropdown = document.getElementById("dropdownMenu");
+        const button = document.getElementById("dropdownButton");
+        if (event.target !== button && !button.contains(event.target)) {
+            dropdown.classList.add("invisible");
+        }
+    };
+
+    // Dynamically applies a flexible mask to the phone input
+    function applyMask(phoneInput, countryCode) {
+        const phoneMask = `${countryCode}[999999999999999]`; // Allow any combination after the country code
+        phoneInput.value = "";
+        Inputmask({
+            mask: phoneMask,
+            placeholder: "",
+            showMaskOnHover: false,
+            showMaskOnFocus: true,
+            definitions: {
+                "9": {
+                    validator: "[0-9]", // Match numbers, special characters, spaces
+                }
+            }
+        }).mask(phoneInput);
+
+
+        // Set the country code at the beginning of the input field
+        phoneInput.value = countryCode;
+    }
+
+    // Handles country selection from dropdown
+    function selectCountry(country) {
+        const phoneInput = document.getElementById("phoneNumber");
+        const selectedCountryDisplay = document.getElementById("selectedCountry");
+        const selectedCountryCodeInput = document.getElementById("selectedCountryCode");
+
+        // Update dropdown display
+        if ("{{ lang }}" === "ru") {
+            selectedCountryDisplay.innerText = `${country.country_ru}`;
+        } else {
+            selectedCountryDisplay.innerText = `${country.country}`;
+        }
+        selectedCountryCodeInput.value = country.code;
+
+        // Dynamically update the mask for the phone number
+        applyMask(phoneInput, country.code);
+
+        // Hide dropdown
+        toggleDropdown();
+    }
+
+
+</script>
+</body>
+
+</html>

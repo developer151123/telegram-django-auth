@@ -1,0 +1,68 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-21 12:50+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: .\templates\login-by-phone.html:21
+msgid "Please confirm your country code and enter your phone number."
+msgstr "Проверьте код страны и введите свой номер телефона."
+
+#: .\templates\login-by-phone.html:25
+msgid "Country"
+msgstr "Страна"
+
+#: .\templates\login-by-phone.html:84
+msgid "Your phone number"
+msgstr "Номер телефона"
+
+#: .\templates\login-by-phone.html:103
+msgid "Keep me signed in"
+msgstr "Запомнить меня"
+
+#: .\templates\login-by-phone.html:109
+msgid "Next"
+msgstr "Дальше"
+
+#: .\templates\login-by-phone.html:111
+msgid "Log in by QR Code"
+msgstr "Вход по QR-коду"
+
+#: .\templates\login-qr.html:20
+msgid "Log in to Telegram by QR Code"
+msgstr "Быстрый вход по QR-коду"
+
+#: .\templates\login-qr.html:26
+msgid "Open Telegram on your phone"
+msgstr "Откройте Telegram с телефона"
+
+#: .\templates\login-qr.html:32
+msgid ""
+"Go to <b>Settings</b> &gt; <b>Devices</b> &gt; <b>Link Desktop Device</b>"
+msgstr ""
+"Откройте <b>Настройки</b> &gt; <b>Устройства</b> &gt; <b>Подключить "
+"устройство</b>"
+
+#: .\templates\login-qr.html:38
+msgid "Point your phone at this screen to confirm login"
+msgstr "Для подтверждения направьте камеру телефона на этот экран."
+
+#: .\templates\login-qr.html:43
+msgid "Log in by phone Number"
+msgstr "Вход по номеру телефона"
