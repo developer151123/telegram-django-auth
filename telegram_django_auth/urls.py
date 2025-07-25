@@ -16,11 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from telegram_django_auth.views import qr_login_view, change_language, telegram_view, phone_login_view
+from telegram_django_auth.views import qr_login_view, change_language, telegram_view, phone_login_view, qr_wait_login
 
 urlpatterns = [
     path('', telegram_view, name='telegram'),
     path('qr/', qr_login_view, name='login-qr'),
+    path('qr-wait-login/', qr_wait_login, name='login-qr-wait'),
     path('admin/', admin.site.urls),
     path('phone/', phone_login_view, name='login-by-phone'),
     path('change-language/', change_language, name='change_language'),

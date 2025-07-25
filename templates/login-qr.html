@@ -17,7 +17,8 @@
 <body class="flex h-full w-full justify-center items-start">
 <div id="auth-form" class="flex flex-col items-center justify-center gap-4 w-[330px]">
     <div data-empty-placeholder class="qr background-primary mt-16 mb-8" id="qr">
-       <img src="{% qr_url_from_text url size=16 %}" alt="Hello World!">
+       <img src="{% qr_url_from_text url size=16 %}" alt="QR Code">
+       <input type="hidden" id="token" name="variable" value="{{ token }}">
     </div>
     <h1 class="text-xl font-semibold">{% trans "Log in to Telegram by QR Code" %}</h1>
     <ol class="list-decimal list-inside space-y-4">
@@ -46,6 +47,7 @@
         {% if lang == "en" %}
             <button id="qr-russian-btn" class="uppercase color-primary hover:bg-sky-50 w-96 h-12 rounded-xl">Продолжить на русском</button>
         {% endif %}
+        <p id="message">Waiting for connect...</p>
     </div>
 </div>
 
@@ -59,12 +61,48 @@
         });
 
         if (document.getElementById("qr-russian-btn")) {
-         document.getElementById("qr-russian-btn").addEventListener("click", function (event) {
-            // Navigate to a Russian-specific page or another URL
-            event.preventDefault();
-            window.location.href = "/change-language/?lang=ru&app=qr"; // Replace with your URL
-        });
+             document.getElementById("qr-russian-btn").addEventListener("click", function (event) {
+                // Navigate to a Russian-specific page or another URL
+                event.preventDefault();
+                window.location.href = "/change-language/?lang=ru&app=qr"; // Replace with your URL
+            });
         }
+
+        const delay = 10000;
+        const message = document.getElementById("message");
+
+        // Start the timer
+        const interval = setInterval(() => {
+            console.log("Timer started");
+            var token = document.getElementById("token").value;
+            // Fetch data from backend after the timer ends
+            fetch("/qr-wait-login/?token="+token) // Replace with your backend route
+                .then((response) => response.json()) // Parse JSON response
+                .then((data) => {
+                    if (data.result) {
+                        clearInterval(interval);
+                        message.innerText = "Connected";
+                    }
+                    else if (data.timeout) {
+                        console.log("Timeout");
+                        clearInterval(interval);
+                        if (location.href.indexOf("?") === -1) {
+                            window.location = location.href += "?token="+token;
+                        }
+                        else
+                            location.reload();
+                    }
+                    else {
+                        message.innerText = "Wait again ...";
+                    }
+                })
+                .catch((error) => {
+                    // Handle errors
+                    message.innerText = "Telegram connect error.";
+                    console.error("Error:", error);
+                });
+        }, delay);
+
      }
 </script>
 
