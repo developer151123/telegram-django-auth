@@ -9,7 +9,7 @@ from telethon.tl.custom import QRLogin
 from telegram_django_auth import settings
 from telegram_django_auth.countries import countries
 
-from telethon import TelegramClient
+from telethon import TelegramClient, errors
 from telethon.sessions import StringSession
 
 from asgiref.sync import async_to_sync
@@ -61,12 +61,17 @@ def qr_login_view(request):
     token = parse_qs(parsed_url.query)['token'][0]
     return render(request, 'login-qr.html',{'lang': request.session[settings.LANGUAGE_COOKIE_NAME], 'url': qr_url, 'token': token})
 
+def qr_password(request):
+    lang_code = request.session[settings.LANGUAGE_COOKIE_NAME]
+    activate(lang_code)
+    return render(request, 'login-qr-password.html',{'lang': request.session[settings.LANGUAGE_COOKIE_NAME]})
 
 async def qr_wait_login(request):
     # Simulate data to be fetched
     data = {
         "timeout": False,
-        "result": False
+        "result": False,
+        "password": False,
     }
 
     # Important! You need to wait for the login to complete!
@@ -75,6 +80,8 @@ async def qr_wait_login(request):
         data.result = await qrlo.wait(10)
     except TimeoutError:
         data["timeout"] = True
+    except errors.SessionPasswordNeededError:
+        data["password"] = True
     return JsonResponse(data)
 
 def phone_login_view(request):
